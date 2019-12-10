@@ -1,36 +1,55 @@
 package commands.cook;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class ChatBot {
     private String name;
     private String info = "Developed by Kirill and Nikolay\nversion: 0.2b";
     private boolean alive;
-    private static HashMap<String, Food> holidayFood;
+    //private static HashMap<String, Food> holidayFood;
+    //private Languages language = Languages.ENGLISH;
+    private Locale locale = new Locale("en");
     //private DataBase dataBase;
 
-    static  { //TODO dict with all foods and in holy foods; food from here
+    public HashMap<String, Command> commands = new HashMap<>();
+
+    /*static  {
         try{
-        holidayFood = new HashMap<String, Food>();
-        holidayFood.put("new year", new Food("Olivier salad"));
-        holidayFood.put("birthday", new Food("Mashed potato"));
-        holidayFood.put("valentine's day", new Food("Spaghetti"));
-        holidayFood.put("1st september", new Food("Cake"));
-        holidayFood.put("christmas", new Food("Pelmeni"));
-        holidayFood.put("thanksgiving day", new Food("Turkey as food"));
-        holidayFood.put("maslenitsa", new Food("Pancake"));
-        holidayFood.put("1st may", new Food("Pie"));
-        holidayFood.put("9th may", new Food("Porridge"));
-        holidayFood.put("1st april", new Food("Pie"));
-        holidayFood.put("russia day", new Food("Borscht"));
-        holidayFood.put("test", new Food("non123"));
+            holidayFood = new HashMap<>();
+            holidayFood.put("new year", new Food("Olivier salad"));
+            holidayFood.put("birthday", new Food("Mashed potato"));
+            holidayFood.put("valentine's day", new Food("Spaghetti"));
+            holidayFood.put("1st september", new Food("Cake"));
+            holidayFood.put("christmas", new Food("Pelmeni"));
+            holidayFood.put("thanksgiving day", new Food("Turkey as food"));
+            holidayFood.put("maslenitsa", new Food("Pancake"));
+            holidayFood.put("1st may", new Food("Pie"));
+            holidayFood.put("9th may", new Food("Porridge"));
+            holidayFood.put("1st april", new Food("Pie"));
+            holidayFood.put("russia day", new Food("Borscht"));
+            holidayFood.put("новый год", new Food("Оливье (салат)"));
+            holidayFood.put("день рождения", new Food("Картофельное пюре"));
+            holidayFood.put("день святого Валентина", new Food("Спагетти"));
+            holidayFood.put("первое сентября", new Food("Торт"));
+            holidayFood.put("рождество", new Food("пельмени"));
+            holidayFood.put("день благодарения", new Food("Индюшатина"));
+            holidayFood.put("масленица", new Food("Блины"));
+            holidayFood.put("первое мая", new Food("Пирог"));
+            holidayFood.put("девятое мая", new Food("Пудинг"));
+            holidayFood.put("первое апреля", new Food("Пирог"));
+            holidayFood.put("день России", new Food("Борщ"));
+            //holidayFood.put("test", new Food("non123"));
         }catch (IOException e) {
             System.exit(1);
         }
-    }
-
-    public HashMap<String, Command> commands = new HashMap<>();
+    }*/
     /*static {
         commands = new HashMap<>();
         commands.put("echo", Command("repeat your text", echo);
@@ -64,8 +83,10 @@ public class ChatBot {
 
     public String getHolidayFood(String arg) { //also we can do Livenstein distance support
         StringBuilder str = new StringBuilder();
+        ResourceBundle res = ResourceBundle.getBundle("ProgramResources", this.locale);
+        HashMap<String, Food> holidayFood = (HashMap<String, Food>)res.getObject("hashM");
         if (holidayFood.get(arg) == null) {
-            str.append("Available variants:\n");
+            str.append(res.getString("avVar"));
             int counter = 0;
             for (String holiday : holidayFood.keySet()) {
                 if (holiday.contains(arg)) {
@@ -74,7 +95,7 @@ public class ChatBot {
                     counter += 1;
                 }
             }
-            str.append("summary ").append(counter).append(" variants");
+            str.append(res.getString("sum")).append(counter).append(res.getString("var"));
         } else {
             str.append(holidayFood.get(arg).name);
             str.append('\n');
@@ -83,14 +104,21 @@ public class ChatBot {
         return str.toString();
     }
 
+    public String changeLanguage(String arg){
+        this.locale = (this.locale.equals(new Locale("en")))
+                ? new Locale("ru")
+                : new Locale("en");
+        return this.locale.toString();
+    }
+
     public boolean isAlive() {
         return this.alive;
     }
 
-    public String getDescription(Food food){ // if we have description then ok
+    public synchronized String getDescription(Food food){ // if we have description then ok
         // if we don't have then find it in wiki
         if (food.description.equals("")){
-            food.description = Parser.getDescriptionFromInternet(food.name);
+            food.description = Parser.getDescriptionFromInternet(food.name, this.locale);
             DataBase.setInDB(food);
         }
         return food.description;
@@ -104,5 +132,6 @@ public class ChatBot {
         commands.put("info", new Command("get information about bot", this::getInfo));
         commands.put("help", new Command("get information about command", this::help));
         commands.put("holiday", new Command("gives you information about food for holidays", this::getHolidayFood));
+        commands.put("changelanguage", new Command("change language", this::changeLanguage));
     }
 }

@@ -1,5 +1,8 @@
 package commands.cook;
 
+import bot.Bot;
+import bot.Status;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -83,7 +86,7 @@ public class ChatBot {
 
     public String getHolidayFood(String arg) { //also we can do Livenstein distance support
         StringBuilder str = new StringBuilder();
-        ResourceBundle res = ResourceBundle.getBundle("ProgramResources", this.locale);
+        ResourceBundle res = ResourceBundle.getBundle("commands.cook.ProgramResources", this.locale);
         HashMap<String, Food> holidayFood = (HashMap<String, Food>)res.getObject("hashM");
         if (holidayFood.get(arg) == null) {
             str.append(res.getString("avVar"));
@@ -102,6 +105,12 @@ public class ChatBot {
             str.append(getDescription(holidayFood.get(arg)));
         }
         return str.toString();
+    }
+
+    public Food getFood(String arg){
+        ResourceBundle res = ResourceBundle.getBundle("commands.cook.ProgramResources", this.locale);
+        HashMap<String, Food> food = (HashMap<String, Food>)res.getObject("hashF");
+        return food.get(arg);
     }
 
     public String changeLanguage(String arg){
@@ -124,7 +133,26 @@ public class ChatBot {
         return food.description;
     }
 
-    ChatBot(String name) {
+    public String getResponse(Bot bot, String input)
+    {
+        String name = input.split(" ")[0];
+        String arg = "";
+        if (input.length() >= 2)
+            arg = input.substring(input.indexOf(" ") + 1);
+        String result = "This command is undefined";
+        if (commands.containsKey(name)) {
+            result = commands.get(name).func.apply(arg.toLowerCase());
+        }
+        return result;
+    }
+
+    public String start(Bot bot, String input)
+    {
+        bot.statusActive = Status.COOK;
+        return "подсказать какое-нибудь блюдо?";
+    }
+
+    public ChatBot(String name) {
         this.name = name;
         this.alive = true;
         commands.put("echo", new Command("repeat your text", this::echo));

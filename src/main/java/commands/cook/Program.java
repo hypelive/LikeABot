@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Program {
     public static void main(String[] args) {
-        ChatBot bot = new ChatBot("Pavel");
+        ChatBot bot = new ChatBot("P");
         while (bot.isAlive()) {
                 Scanner scan = new Scanner(System.in, "CP1251");
                 String inp = scan.nextLine();

@@ -42,7 +42,8 @@ public class Main extends TelegramLongPollingBot {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         if (args[0].equals("console")) {
-            restore();
+            //restore();
+            users.put(0L, new Bot());
             Scanner in = new Scanner(System.in, "Cp866");
             while (true) {
                 save();

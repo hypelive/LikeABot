@@ -17,6 +17,7 @@ import commands.Owners;
 import commands.Quit;
 import commands.Start;
 import commands.Study;
+import commands.cook.ChatBot;
 import commands.organizer.Flag;
 import commands.organizer.Organizer;
 import commands.organizer.OrganizerElement;
@@ -28,7 +29,7 @@ public class Bot {
     public int life;
     public String wordEncrypted;
     public String word;
-    public ArrayList<Character> usateLettere;
+    public ArrayList<Character> usageLetters;
 
     public CopyOnWriteArrayList<OrganizerElement> organizer = new CopyOnWriteArrayList<>();
     public ConcurrentHashMap<String, HashMap<Integer, Boolean>> deadlines = new ConcurrentHashMap<>();
@@ -41,6 +42,8 @@ public class Bot {
     public Boolean test = false;
     public String time;
     public Integer count = 0;
+
+    private ChatBot cook = new ChatBot("P");
 
     public Bot() {
         study = new Study();
@@ -74,6 +77,8 @@ public class Bot {
         dictionaryMenu.put("study", study::mainMenu);
         dictionaryMenu.put("organizer", Organizer::start);
         dictionaryMenu.put("органайзер", Organizer::start);
+        dictionaryMenu.put("cook", cook::start);
+        dictionaryMenu.put("повар", cook::start);
 
         dict.put(Status.MENU, dictionaryMenu);
 
@@ -165,6 +170,11 @@ public class Bot {
         dictShow.put("выход", Organizer::quit);
 
         dict.put(Status.ORGANIZER_SHOW, dictShow);
+
+        HashMap<String, BiFunction<Bot, String, String>> dictCook = new HashMap<>();
+        dictCook.put("default", cook::getResponse);
+
+        dict.put(Status.COOK, dictCook);
     }
 
     public String getAnswer(String line) {

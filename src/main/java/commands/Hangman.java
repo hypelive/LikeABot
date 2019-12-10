@@ -1,13 +1,5 @@
 package commands;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -56,7 +48,7 @@ public class Hangman {
         bot.word = words.get(new Random().nextInt(words.size() - 1));
         bot.wordEncrypted = generateEncryptedWord(bot.word);
         bot.life = 6;
-        bot.usateLettere = new ArrayList<Character>();
+        bot.usageLetters = new ArrayList<Character>();
         return welcome() + "\n" + levels.get(bot.life) + "\n" + bot.wordEncrypted;
     }
 
@@ -68,7 +60,7 @@ public class Hangman {
         String c = command.toLowerCase();
         if (checkLetterWas(command, bot))
             return "Ты уже называл эту букву";
-        bot.usateLettere.add(c.charAt(0));
+        bot.usageLetters.add(c.charAt(0));
         openLetters(c, bot);
         if (!bot.wordEncrypted.contains("_")) {
             bot.statusActive = Status.MENU;
@@ -110,7 +102,7 @@ public class Hangman {
 
     private static Boolean checkLetterWas(String command, Bot bot) {
         String c = command.toLowerCase();
-        for (Character e : bot.usateLettere) {
+        for (Character e : bot.usageLetters) {
             if (e.equals(c.charAt(0)))
                 return true;
         }

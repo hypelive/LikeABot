@@ -7,23 +7,35 @@ import java.util.ListResourceBundle;
 public class ProgramResources_en extends ListResourceBundle {
     @Override
     protected Object[][] getContents() {
-        HashMap holidayFood = new HashMap<>();
+        HashMap food = new HashMap<>();
         try {
-            holidayFood.put("new year", new Food("Olivier salad"));
-            holidayFood.put("birthday", new Food("Mashed potato"));
-            holidayFood.put("valentine's day", new Food("Spaghetti"));
-            holidayFood.put("1st september", new Food("Cake"));
-            holidayFood.put("christmas", new Food("Pelmeni"));
-            holidayFood.put("thanksgiving day", new Food("Turkey as food"));
-            holidayFood.put("maslenitsa", new Food("Pancake"));
-            holidayFood.put("1st may", new Food("Pie"));
-            holidayFood.put("9th may", new Food("Porridge"));
-            holidayFood.put("1st april", new Food("Pie"));
-            holidayFood.put("russia day", new Food("Borscht"));
+            food.put("olivier salad", new Food("olivier salad"));
+            food.put("mashed potato", new Food("mashed potato"));
+            food.put("spaghetti", new Food("spaghetti"));
+            food.put("cake", new Food("cake"));
+            food.put("pelmeni", new Food("pelmeni"));
+            food.put("turkey as food", new Food("turkey as food"));
+            food.put("pancake", new Food("pancake"));
+            food.put("pie", new Food("pie"));
+            food.put("porridge", new Food("porridge"));
+            food.put("pie", new Food("pie"));
+            food.put("borscht", new Food("borscht"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new Object[][] {{"hashM", holidayFood},
+        HashMap holidayFood = new HashMap<>();
+        holidayFood.put("new year", food.get("olivier salad"));
+        holidayFood.put("birthday", food.get("mashed potato"));
+        holidayFood.put("valentine's day", food.get("spaghetti"));
+        holidayFood.put("1st september", food.get("cake"));
+        holidayFood.put("christmas", food.get("pelmeni"));
+        holidayFood.put("thanksgiving day", food.get("turkey as food"));
+        holidayFood.put("maslenitsa", food.get("pancake"));
+        holidayFood.put("1st may", food.get("pie"));
+        holidayFood.put("9th may", food.get("porridge"));
+        holidayFood.put("1st april", food.get("pie"));
+        holidayFood.put("russia day", food.get("borscht"));
+        return new Object[][] {{"hashM", holidayFood}, {"hasF", food},
                 {"nfInf", "information about this food is not found"},
                 {"findR", "you can find recipes here: "},
                 {"url", "https://recipebook.io/recipes?key="},

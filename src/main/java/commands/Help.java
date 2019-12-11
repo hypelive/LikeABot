@@ -11,6 +11,7 @@ public class Help{
                 " * study - информация для учебы\n" +
                 " * game - игра 'Виселица'\n" +
                 " * organizer - личный time-manager\n" +
+                " * cook - научу готовить\n" +
                 " * quit - попрощаться";
     }
 }

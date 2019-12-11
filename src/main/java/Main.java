@@ -22,7 +22,7 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Main extends TelegramLongPollingBot {
-    private static String BOT_NAME = "WhoPi";
+    private static String BOT_NAME = "Awecome Cook Bot";
     private static String BOT_TOKEN = "";
     private static String time;
 
@@ -59,9 +59,13 @@ public class Main extends TelegramLongPollingBot {
             ApiContextInitializer.init();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
             bot = new Main();
-            restore();
-            if (args[1].equals("test")){
-                time = args[2];
+            //restore();
+            try {
+                if (args[1].equals("test")) {
+                    time = args[2];
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("real-mode is on");
             }
             try {
                 telegramBotsApi.registerBot(bot);
@@ -79,6 +83,14 @@ public class Main extends TelegramLongPollingBot {
         @Override
         public void run() {
             while (true) {
+                if (users.size() == 0) {
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    continue;
+                }
                 for (Long a : users.keySet()) {
                     if (!time.equals("")){
                         users.get(a).test = true;
@@ -120,13 +132,15 @@ public class Main extends TelegramLongPollingBot {
             }
 
             result = users.get(chatId).getAnswer(message);
-            //users.computeIfAbsent()
             result = EmojiParser.parseToUnicode(result);
             sendMessage.setText(result);
             sendMessage.setParseMode(ParseMode.HTML);
             bot.execute(sendMessage);
             try {
                 save();
+                System.out.println("--- отладка ---");
+                System.out.println("It has saved.");
+                System.out.println(users.get(chatId));
             } catch (IOException e) {
                 e.printStackTrace();
             }

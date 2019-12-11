@@ -18,6 +18,7 @@ import commands.Quit;
 import commands.Start;
 import commands.Study;
 import commands.cook.ChatBot;
+import commands.cook2.Cooker;
 import commands.organizer.Flag;
 import commands.organizer.Organizer;
 import commands.organizer.OrganizerElement;
@@ -77,8 +78,10 @@ public class Bot {
         dictionaryMenu.put("study", study::mainMenu);
         dictionaryMenu.put("organizer", Organizer::start);
         dictionaryMenu.put("органайзер", Organizer::start);
-        dictionaryMenu.put("cook", cook::start);
-        dictionaryMenu.put("повар", cook::start);
+        dictionaryMenu.put("cook2", cook::start);
+        dictionaryMenu.put("повар2", cook::start);
+        dictionaryMenu.put("повар", Cooker::start);
+        dictionaryMenu.put("cook", Cooker::start);
 
         dict.put(Status.MENU, dictionaryMenu);
 
@@ -172,15 +175,24 @@ public class Bot {
         dict.put(Status.ORGANIZER_SHOW, dictShow);
 
         HashMap<String, BiFunction<Bot, String, String>> dictCook = new HashMap<>();
-        dictCook.put("default", cook::getResponse);
+        dictCook.put("default", Cooker::showDefault);
+        dictCook.put("help", Cooker::help);
+        dictCook.put("quit", Cooker::quit);
+        //dictCook.put("default", cook::getResponse);
 
         dict.put(Status.COOK, dictCook);
+
+        HashMap<String, BiFunction<Bot, String, String>> dictCook2 = new HashMap<>();
+        dictCook2.put("default", cook::getResponse2);
+
+        dict.put(Status.COOK2, dictCook2);
     }
 
     public String getAnswer(String line) {
         String command = line;
-        if (!Pattern.matches(" +", line))
+        if (!Pattern.matches(" +", line)) {
             command = line.split(" ")[0].toLowerCase();
+        }
         return dict.get(statusActive)
                 .getOrDefault(command, dict.get(statusActive).get("default"))
                 .apply(this, line);

@@ -53,6 +53,7 @@ public class ProgramResources_ru extends ListResourceBundle {
                 {"holiday", "подскажу еду на праздник"},
                 {"language", "сменить язык"},
                 {"cook", "начать готовить еду с рецептом"},
-                {"have recipe", "у нас есть рецепт, хотите попробовать?"}};
+                {"have recipe", "у нас есть рецепт, хотите попробовать?"},
+                {"quit", "возврат в главное меню"}};
     }
 }

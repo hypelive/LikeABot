@@ -53,6 +53,7 @@ public class ProgramResources_en extends ListResourceBundle {
                 {"holiday", "gives you information about food for holidays"},
                 {"language", "change language"},
                 {"cook", "start cook food with recipe"},
-                {"have recipe", "we have a recipe for this, do you want to try?"}};
+                {"have recipe", "we have a recipe for this, do you want to try?"},
+                {"quit", "going back to the main menu"}};
     }
 }

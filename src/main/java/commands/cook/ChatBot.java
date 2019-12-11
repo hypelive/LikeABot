@@ -25,7 +25,7 @@ public class ChatBot {
         locales.put("ru", new Locale("ru"));
     }
     @Expose(serialize = false, deserialize = false)
-    private ResourceBundle resources;
+    private ResourceBundle resources = ResourceBundle.getBundle("commands.cook.ProgramResources", locale);
     //private DataBase dataBase;
 
     public HashMap<String, Command> commands = new HashMap<>();

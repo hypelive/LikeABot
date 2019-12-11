@@ -29,6 +29,9 @@ public class Food {
             this.description = food.description;
             this.recipeSteps = food.recipeSteps;
         }
+        if (recipeSteps == null){
+            RecipeInitializer.initRecipe(this);
+        }
     }
 
     //public ArrayList<string> ingridients;

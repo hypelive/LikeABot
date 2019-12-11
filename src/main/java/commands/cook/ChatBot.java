@@ -2,15 +2,15 @@ package commands.cook;
 
 import bot.Bot;
 import bot.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.annotations.Expose;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 
 public class ChatBot {
     private String name;
@@ -19,6 +19,13 @@ public class ChatBot {
     //private static HashMap<String, Food> holidayFood;
     //private Languages language = Languages.ENGLISH;
     private Locale locale = new Locale("en");
+    private static HashMap<String, Locale> locales = new HashMap<>();
+    static {
+        locales.put("en", new Locale("en"));
+        locales.put("ru", new Locale("ru"));
+    }
+    @Expose(serialize = false, deserialize = false)
+    private ResourceBundle resources;
     //private DataBase dataBase;
 
     public HashMap<String, Command> commands = new HashMap<>();
@@ -86,10 +93,9 @@ public class ChatBot {
 
     public String getHolidayFood(String arg) { //also we can do Livenstein distance support
         StringBuilder str = new StringBuilder();
-        ResourceBundle res = ResourceBundle.getBundle("commands.cook.ProgramResources", this.locale);
-        HashMap<String, Food> holidayFood = (HashMap<String, Food>)res.getObject("hashM");
+        HashMap<String, Food> holidayFood = (HashMap<String, Food>)resources.getObject("hashM");
         if (holidayFood.get(arg) == null) {
-            str.append(res.getString("avVar"));
+            str.append(resources.getString("avVar"));
             int counter = 0;
             for (String holiday : holidayFood.keySet()) {
                 if (holiday.contains(arg)) {
@@ -98,7 +104,7 @@ public class ChatBot {
                     counter += 1;
                 }
             }
-            str.append(res.getString("sum")).append(counter).append(res.getString("var"));
+            str.append(resources.getString("sum")).append(counter).append(resources.getString("var"));
         } else {
             str.append(holidayFood.get(arg).name);
             str.append('\n');
@@ -108,16 +114,16 @@ public class ChatBot {
     }
 
     public Food getFood(String arg){
-        ResourceBundle res = ResourceBundle.getBundle("commands.cook.ProgramResources", this.locale);
-        HashMap<String, Food> food = (HashMap<String, Food>)res.getObject("hashF");
+        HashMap<String, Food> food = (HashMap<String, Food>) resources.getObject("hashF");
         return food.get(arg);
     }
 
     public String changeLanguage(String arg){
-        this.locale = (this.locale.equals(new Locale("en")))
-                ? new Locale("ru")
-                : new Locale("en");
-        return this.locale.toString();
+        if (!locales.containsKey(arg))
+            return "unsupported language"; //TODO
+        this.locale = locales.get(arg);
+        resources = ResourceBundle.getBundle("commands.cook.ProgramResources", this.locale);
+        return "Current language: " + this.locale.toString();
     }
 
     public boolean isAlive() {
@@ -139,7 +145,7 @@ public class ChatBot {
         String arg = "";
         if (input.length() >= 2)
             arg = input.substring(input.indexOf(" ") + 1);
-        String result = "This command is undefined";
+        String result = "This command is undefined"; //TODO
         if (commands.containsKey(name)) {
             result = commands.get(name).func.apply(arg.toLowerCase());
         }
@@ -149,7 +155,7 @@ public class ChatBot {
     public String start(Bot bot, String input)
     {
         bot.statusActive = Status.COOK;
-        return "подсказать какое-нибудь блюдо?";
+        return "подсказать какое-нибудь блюдо?"; //TODO
     }
 
     public ChatBot(String name) {
@@ -160,6 +166,6 @@ public class ChatBot {
         commands.put("info", new Command("get information about bot", this::getInfo));
         commands.put("help", new Command("get information about command", this::help));
         commands.put("holiday", new Command("gives you information about food for holidays", this::getHolidayFood));
-        commands.put("changelanguage", new Command("change language", this::changeLanguage));
+        commands.put("language", new Command("change language", this::changeLanguage));
     }
 }

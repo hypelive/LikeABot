@@ -46,7 +46,7 @@ public class Main extends TelegramLongPollingBot {
             users.put(0L, new Bot());
             Scanner in = new Scanner(System.in, "Cp866");
             while (true) {
-                save();
+                //save();  I think that we dont need save every frame
                 String line = in.nextLine();
                 String result = users.get(0L).getAnswer(line);
                 result = processing(result);

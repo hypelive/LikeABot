@@ -16,11 +16,10 @@ public class Food {
     public String name;
     public String description;
 
-    public GregorianCalendar startOfCooking; //base time
     public ArrayList<Pair<Integer, String>> recipeSteps = new ArrayList<>(); //тут пары типа : (15, "посолите воду")
                                                                              //где 15 минут от base time
 
-    //из этих двух полей надо будет составить и добавить в органайзер рецепт
+    //так надо будет составить и добавить в органайзер рецепт
 
     public Food(String name) throws IOException {
         this.description = "";

@@ -8,7 +8,7 @@ public class ProgramResources_ru extends ListResourceBundle {
     @Override
     protected Object[][] getContents() {
         HashMap<String, Food> holidayFood = new HashMap<String, Food>();
-        try{
+        try{ //TODO
             holidayFood.put("новый год", new Food("Оливье (салат)"));
             holidayFood.put("день рождения", new Food("Картофельное пюре"));
             holidayFood.put("день святого Валентина", new Food("Спагетти"));

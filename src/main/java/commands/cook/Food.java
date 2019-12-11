@@ -1,16 +1,9 @@
 package commands.cook;
 
-import commands.TimeEvent;
 import org.javatuples.Pair;
-import org.javatuples.Tuple;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 public class Food {
     public String name;
@@ -18,6 +11,7 @@ public class Food {
 
     public ArrayList<Pair<Integer, String>> recipeSteps = new ArrayList<>(); //тут пары типа : (15, "посолите воду")
                                                                              //где 15 минут от base time
+    public String ingredients;
 
     //так надо будет составить и добавить в органайзер рецепт
 
@@ -28,8 +22,9 @@ public class Food {
         if(food != null) {
             this.description = food.description;
             this.recipeSteps = food.recipeSteps;
+            ingredients = food.ingredients;
         }
-        if (recipeSteps == null){
+        if (recipeSteps == null || ingredients == null){
             RecipeInitializer.initRecipe(this);
         }
     }

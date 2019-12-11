@@ -14,11 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    public static String getDescriptionFromInternet(String food, Locale locale){ // if we have description then ok
+    public static String getDescriptionFromInternet(String food, ResourceBundle res){ // if we have description then ok
         // if we don't have then find it in wiki
-        ResourceBundle res = ResourceBundle.getBundle("commands.cook.ProgramResources", locale);
         StringBuilder description = new StringBuilder();
-        String page = getPageWithDescription(food, locale);
+        String page = getPageWithDescription(food, res);
         Pattern pattern = Pattern.compile("<p>.*?<b>.+?</p>");
         Matcher matcher = pattern.matcher(page);
         if (!(matcher.find())){
@@ -37,10 +36,9 @@ public class Parser {
         return description.toString();
     }
 
-    private static String getPageWithDescription(String food, Locale locale) {
+    private static String getPageWithDescription(String food, ResourceBundle res) {
         URL url;
         String page = "";
-        ResourceBundle res = ResourceBundle.getBundle("commands.cook.ProgramResources", locale);
         try {
             food = URLEncoder.encode(food, "utf-8");
             food = food.replace('+', '_');

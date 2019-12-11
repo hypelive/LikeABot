@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 public class ChatBot {
+    private final String bundleBaseName = "commands.cook.ProgramResources";
     private String name;
     private String info = "Developed by Kirill and Nikolay\nversion: 0.2b";
     private boolean alive;
@@ -25,7 +26,7 @@ public class ChatBot {
         locales.put("ru", new Locale("ru"));
     }
     @Expose(serialize = false, deserialize = false)
-    private ResourceBundle resources = ResourceBundle.getBundle("commands.cook.ProgramResources", locale);
+    private ResourceBundle resources = ResourceBundle.getBundle(bundleBaseName, locale);
     //private DataBase dataBase;
 
     public HashMap<String, Command> commands = new HashMap<>();
@@ -85,7 +86,7 @@ public class ChatBot {
         for (String key : commands.keySet()) {
             result.append(key);
             result.append("- ");
-            result.append(commands.get(key).description);
+            result.append(commands.get(key).getDescription(resources));
             result.append("\n");
         }
         return result.toString();
@@ -120,10 +121,15 @@ public class ChatBot {
 
     public String changeLanguage(String arg){
         if (!locales.containsKey(arg))
-            return "unsupported language"; //TODO
+            return (String) resources.getObject("unsupported lang");
         this.locale = locales.get(arg);
-        resources = ResourceBundle.getBundle("commands.cook.ProgramResources", this.locale);
-        return "Current language: " + this.locale.toString();
+        resources = ResourceBundle.getBundle(bundleBaseName, this.locale);
+        return resources.getObject("current lang") + this.locale.toString();
+    }
+
+    public String startCook(String foodName){
+        // go to organizer and add recipe to schedule
+        return "not implemented yet";
     }
 
     public boolean isAlive() {
@@ -132,11 +138,17 @@ public class ChatBot {
 
     public synchronized String getDescription(Food food){ // if we have description then ok
         // if we don't have then find it in wiki
+        StringBuilder res = new StringBuilder();
         if (food.description.equals("")){
-            food.description = Parser.getDescriptionFromInternet(food.name, this.locale);
+            food.description = Parser.getDescriptionFromInternet(food.name, resources);
             DataBase.setInDB(food);
         }
-        return food.description;
+        res.append(food.description);
+        if (food.recipeSteps != null) {
+            res.append("\n");
+            res.append((String) resources.getObject("have recipe"));
+        }
+        return res.toString();
     }
 
     public String getResponse(Bot bot, String input)
@@ -145,7 +157,7 @@ public class ChatBot {
         String arg = "";
         if (input.length() >= 2)
             arg = input.substring(input.indexOf(" ") + 1);
-        String result = "This command is undefined"; //TODO
+        String result = (String) resources.getObject("unknown cmd");
         if (commands.containsKey(name)) {
             result = commands.get(name).func.apply(arg.toLowerCase());
         }
@@ -155,17 +167,18 @@ public class ChatBot {
     public String start(Bot bot, String input)
     {
         bot.statusActive = Status.COOK;
-        return "подсказать какое-нибудь блюдо?"; //TODO
+        return (String) resources.getObject("can i help");
     }
 
     public ChatBot(String name) {
         this.name = name;
         this.alive = true;
-        commands.put("echo", new Command("repeat your text", this::echo));
-        commands.put("name", new Command("get name of bot", this::getName));
-        commands.put("info", new Command("get information about bot", this::getInfo));
-        commands.put("help", new Command("get information about command", this::help));
-        commands.put("holiday", new Command("gives you information about food for holidays", this::getHolidayFood));
-        commands.put("language", new Command("change language", this::changeLanguage));
+        commands.put("echo", new Command("echo", this::echo));
+        commands.put("name", new Command("name", this::getName));
+        commands.put("info", new Command("info", this::getInfo));
+        commands.put("help", new Command("help", this::help));
+        commands.put("holiday", new Command("holiday", this::getHolidayFood));
+        commands.put("language", new Command("language", this::changeLanguage));
+        commands.put("cook", new Command("cook", this::startCook));
     }
 }

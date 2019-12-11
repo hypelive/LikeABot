@@ -4,15 +4,15 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 
 public class Command {
-    public String description;
+    public String name;
     public final Function<String, String> func;
 
     public Command(String txt, Function<String, String> f) {
-        description = txt;
+        name = txt;
         func = f;
     }
 
-    public String getDescription(ResourceBundle resoures) {
-        return " "; //TODO
+    public String getDescription(ResourceBundle resources) {
+        return (String) resources.getObject(name);
     }
 }

@@ -42,11 +42,11 @@ public class Main extends TelegramLongPollingBot {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         if (args[0].equals("console")) {
-            //restore();
+            restore();
             users.put(0L, new Bot());
             Scanner in = new Scanner(System.in, "Cp866");
             while (true) {
-                //save();  I think that we dont need save every frame
+                save();
                 String line = in.nextLine();
                 String result = users.get(0L).getAnswer(line);
                 result = processing(result);
@@ -59,9 +59,10 @@ public class Main extends TelegramLongPollingBot {
             ApiContextInitializer.init();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
             bot = new Main();
-            //restore();
+            restore();
             try {
                 if (args[1].equals("test")) {
+                    System.out.println("Test mode is on");
                     time = args[2];
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -69,8 +70,8 @@ public class Main extends TelegramLongPollingBot {
             }
             try {
                 telegramBotsApi.registerBot(bot);
-                Thread t = new chreak();
-                t.start();
+                //Thread t = new chreak();
+                //t.start();
             } catch (TelegramApiRequestException e) {
                 e.printStackTrace();
             }
@@ -83,14 +84,6 @@ public class Main extends TelegramLongPollingBot {
         @Override
         public void run() {
             while (true) {
-                if (users.size() == 0) {
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    continue;
-                }
                 for (Long a : users.keySet()) {
                     if (!time.equals("")){
                         users.get(a).test = true;
@@ -130,7 +123,6 @@ public class Main extends TelegramLongPollingBot {
             if (!(users.containsKey(chatId))) {
                 users.put(chatId, new Bot());
             }
-
             result = users.get(chatId).getAnswer(message);
             result = EmojiParser.parseToUnicode(result);
             sendMessage.setText(result);
@@ -138,15 +130,18 @@ public class Main extends TelegramLongPollingBot {
             bot.execute(sendMessage);
             try {
                 save();
-                System.out.println("--- отладка ---");
-                System.out.println("It has saved.");
-                System.out.println(users.get(chatId));
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
                 e.printStackTrace();
             }
 
         } catch (TelegramApiException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            users.put(chatId, new Bot());
         }
     }
 
@@ -164,7 +159,7 @@ public class Main extends TelegramLongPollingBot {
         String filePath = new File("").getAbsolutePath();
         filePath = filePath.substring(0, filePath.length() - 6);
         FileWriter writer = new FileWriter(filePath + "src/main/resources/users.out");
-        writer.write(gson.toJson(users));
+        //writer.write(gson.toJson(users));
         writer.close();
     }
 
@@ -180,7 +175,9 @@ public class Main extends TelegramLongPollingBot {
         }
         Type collectionType = new TypeToken<ConcurrentHashMap<Long, Bot>>() {
         }.getType();
-        users = gson.fromJson(json, collectionType);
+        if (!json.equals("")) {
+            users = gson.fromJson(json, collectionType);
+        }
         reader.close();
     }
 }

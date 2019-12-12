@@ -1,9 +1,5 @@
 package commands.cook;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class Program {
@@ -24,7 +20,7 @@ public class Program {
                 if (inp.length() >= 2)
                     arg = inp.substring(inp.indexOf(" ") + 1);
                 String result = "This command is undefined";
-                if (bot.commands2.containsKey(name)) {
+                if (bot.commands.containsKey(name)) {
                     //result = bot.commands2.get(name).func2.apply(bot, arg.toLowerCase());
                 } /*else if (name.equalsIgnoreCase("telegram")) {
                     TelegramBot.main(bot);

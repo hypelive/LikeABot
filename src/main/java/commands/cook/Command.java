@@ -1,13 +1,15 @@
 package commands.cook;
 
+import bot.Bot;
+
 import java.util.ResourceBundle;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class Command {
     public String name;
-    public final Function<String, String> func;
+    public final BiFunction<Bot, String, String> func;
 
-    public Command(String txt, Function<String, String> f) {
+    public Command(String txt, BiFunction<Bot, String, String> f) {
         name = txt;
         func = f;
     }

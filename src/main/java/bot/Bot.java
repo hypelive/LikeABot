@@ -76,8 +76,8 @@ public class Bot {
         dictionaryMenu.put("study", study::mainMenu);
         dictionaryMenu.put("organizer", Organizer::start);
         dictionaryMenu.put("органайзер", Organizer::start);
-        dictionaryMenu.put("cook", cook::start);
-        dictionaryMenu.put("повар", cook::start);
+        dictionaryMenu.put("cook", ChatBot::start);
+        dictionaryMenu.put("повар", ChatBot::start);
 
         dict.put(Status.MENU, dictionaryMenu);
 
@@ -171,7 +171,7 @@ public class Bot {
         dict.put(Status.ORGANIZER_SHOW, dictShow);
 
         HashMap<String, BiFunction<Bot, String, String>> dictCook = new HashMap<>();
-        dictCook.put("default", cook::getResponse);
+        dictCook.put("default", ChatBot::getResponse);
 
         dict.put(Status.COOK, dictCook);
     }

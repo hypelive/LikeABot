@@ -6,19 +6,19 @@ import com.google.gson.annotations.Expose;
 import java.util.*;
 
 public class ChatBot {
-    private final String bundleBaseName = "commands.cook.ProgramResources";
+    private final static String bundleBaseName = "commands.cook.ProgramResources";
     private String name;
     private boolean alive;
-    private Locale locale = new Locale("ru");
+    private static Locale locale = new Locale("ru");
     private static HashMap<String, Locale> locales = new HashMap<>();
     static {
         locales.put("en", new Locale("en"));
         locales.put("ru", new Locale("ru"));
     }
     @Expose(serialize = false, deserialize = false)
-    private ResourceBundle resources = ResourceBundle.getBundle(bundleBaseName, locale);
+    private transient static ResourceBundle resources = ResourceBundle.getBundle(bundleBaseName, locale);
 
-    public HashMap<String, Command> commands = new HashMap<>();
+    public static HashMap<String, Command> commands = new HashMap<>();
 
     public String echo(Bot bot, String txt) {
         return txt;
@@ -45,7 +45,7 @@ public class ChatBot {
         return result.toString();
     }
 
-    public String getHolidayFood(Bot bot, String arg) { //also we can do Livenstein distance support
+    public static String getHolidayFood(Bot bot, String arg) { //also we can do Livenstein distance support
         StringBuilder str = new StringBuilder();
         HashMap<String, Food> holidayFood = (HashMap<String, Food>) resources.getObject("hashM");
         if (holidayFood.get(arg) == null) {
@@ -72,15 +72,16 @@ public class ChatBot {
         return food.get(arg);
     }
 
-    public String changeLanguage(Bot bot, String arg){
+    public static String changeLanguage(Bot bot, String arg){
         if (!locales.containsKey(arg))
             return (String) resources.getObject("unsupported lang");
-        this.locale = locales.get(arg);
-        resources = ResourceBundle.getBundle(bundleBaseName, this.locale);
-        return resources.getObject("current lang") + this.locale.toString();
+        locale = locales.get(arg);
+        resources = ResourceBundle.getBundle(bundleBaseName, locale);
+        return resources.getObject("current lang") + locale.toString();
     }
 
-    public String startCook(Bot bot, String foodName){
+    public static String startCook(Bot bot, String foodName){
+
         // go to organizer and add recipe to schedule
         return "not implemented yet";
     }
@@ -89,7 +90,7 @@ public class ChatBot {
         return this.alive;
     }
 
-    public synchronized String getDescription(Food food){ // if we have description then ok
+    public static synchronized String getDescription(Food food){ // if we have description then ok
         // if we don't have then find it in wiki
         StringBuilder res = new StringBuilder();
         if (food.description.equals("")){
@@ -104,7 +105,7 @@ public class ChatBot {
         return res.toString();
     }
 
-    public String getResponse(Bot bot, String input)
+    public static String getResponse(Bot bot, String input)
     {
         String name = input.split(" ")[0];
         String arg = "";
@@ -117,9 +118,10 @@ public class ChatBot {
         return result;
     }
 
-    public String start(Bot bot, String input)
+    public static String start(Bot bot, String input)
     {
         bot.statusActive = Status.COOK;
+        // new ChatBot("Name");
         return (String) resources.getObject("can i help");
     }
 
@@ -130,9 +132,9 @@ public class ChatBot {
         commands.put("echo", new Command("echo", this::echo));
         commands.put("name", new Command("name", this::getName));
         commands.put("help", new Command("help", this::help));
-        commands.put("holiday", new Command("holiday", this::getHolidayFood));
-        commands.put("language", new Command("language", this::changeLanguage));
-        commands.put("cook", new Command("cook", this::startCook));
+        commands.put("holiday", new Command("holiday", ChatBot::getHolidayFood));
+        commands.put("language", new Command("language", ChatBot::changeLanguage));
+        commands.put("cook", new Command("cook",ChatBot::startCook));
         commands.put("quit", new Command("quit", this::quit));
     }
 

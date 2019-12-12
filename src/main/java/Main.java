@@ -1,9 +1,12 @@
 import bot.Bot;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 import com.vdurmont.emoji.EmojiParser;
 import commands.organizer.Flag;
 import commands.organizer.Organizer;
+import javassist.Modifier;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -141,7 +144,6 @@ public class Main extends TelegramLongPollingBot {
             e.printStackTrace();
         } catch (NullPointerException e) {
             e.printStackTrace();
-            users.put(chatId, new Bot());
         }
     }
 
@@ -156,9 +158,12 @@ public class Main extends TelegramLongPollingBot {
 
     public static void save() throws IOException {
         Gson gson = new Gson();
+        GsonBuilder gson1 = new GsonBuilder().excludeFieldsWithModifiers(Modifier.TRANSIENT);
+        Gson gson2 = gson1.create();
         String filePath = new File("").getAbsolutePath();
         filePath = filePath.substring(0, filePath.length() - 6);
         FileWriter writer = new FileWriter(filePath + "src/main/resources/users.out");
+        writer.write(gson2.toJson(users));
         //writer.write(gson.toJson(users));
         writer.close();
     }

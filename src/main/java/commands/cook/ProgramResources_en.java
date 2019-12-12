@@ -54,6 +54,7 @@ public class ProgramResources_en extends ListResourceBundle {
                 {"language", "change language"},
                 {"cook", "start cook food with recipe"},
                 {"have recipe", "we have a recipe for this, do you want to try?"},
-                {"quit", "going back to the main menu"}};
+                {"quit", "going back to the main menu"},
+                {"cook start", "Hi! I'm the robotic cooking expert. I'm going to teach you all that I know."}};
     }
 }

@@ -73,8 +73,8 @@ public class Main extends TelegramLongPollingBot {
             }
             try {
                 telegramBotsApi.registerBot(bot);
-                //Thread t = new chreak();
-                //t.start();
+                Thread t = new chreak();
+                t.start();
             } catch (TelegramApiRequestException e) {
                 e.printStackTrace();
             }
@@ -87,8 +87,9 @@ public class Main extends TelegramLongPollingBot {
         @Override
         public void run() {
             while (true) {
+
                 for (Long a : users.keySet()) {
-                    if (!time.equals("")){
+                    if (time != null){
                         users.get(a).test = true;
                         users.get(a).time = time;
                     }
@@ -140,9 +141,7 @@ public class Main extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
 
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
+        } catch (TelegramApiException | NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -157,14 +156,12 @@ public class Main extends TelegramLongPollingBot {
     }
 
     public static void save() throws IOException {
-        Gson gson = new Gson();
-        GsonBuilder gson1 = new GsonBuilder().excludeFieldsWithModifiers(Modifier.TRANSIENT);
-        Gson gson2 = gson1.create();
+        GsonBuilder gsonBuilder = new GsonBuilder().excludeFieldsWithModifiers(Modifier.TRANSIENT);
+        Gson gson = gsonBuilder.create();
         String filePath = new File("").getAbsolutePath();
         filePath = filePath.substring(0, filePath.length() - 6);
         FileWriter writer = new FileWriter(filePath + "src/main/resources/users.out");
-        writer.write(gson2.toJson(users));
-        //writer.write(gson.toJson(users));
+        writer.write(gson.toJson(users));
         writer.close();
     }
 

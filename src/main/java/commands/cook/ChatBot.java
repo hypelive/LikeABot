@@ -2,7 +2,6 @@ package commands.cook;
 
 import bot.Bot;
 import bot.Status;
-import com.google.gson.annotations.Expose;
 import java.util.*;
 
 public class ChatBot {
@@ -15,7 +14,6 @@ public class ChatBot {
         locales.put("en", new Locale("en"));
         locales.put("ru", new Locale("ru"));
     }
-    @Expose(serialize = false, deserialize = false)
     private transient static ResourceBundle resources = ResourceBundle.getBundle(bundleBaseName, locale);
 
     public static HashMap<String, Command> commands = new HashMap<>();
@@ -121,7 +119,6 @@ public class ChatBot {
     public static String start(Bot bot, String input)
     {
         bot.statusActive = Status.COOK;
-        // new ChatBot("Name");
         return (String) resources.getObject("can i help");
     }
 

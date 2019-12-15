@@ -9,16 +9,16 @@ public class ProgramResources_en extends ListResourceBundle {
     protected Object[][] getContents() {
         HashMap food = new HashMap<>();
         try {
-            food.put("olivier salad", new Food("olivier salad"));
-            food.put("mashed potato", new Food("mashed potato"));
-            food.put("spaghetti", new Food("spaghetti"));
-            food.put("cake", new Food("cake"));
-            food.put("pelmeni", new Food("pelmeni"));
-            food.put("turkey as food", new Food("turkey as food"));
-            food.put("pancake", new Food("pancake"));
-            food.put("pie", new Food("pie"));
-            food.put("porridge", new Food("porridge"));
-            food.put("borscht", new Food("borscht"));
+            food.put("olivier salad", new Food("olivier salad", "en"));
+            food.put("mashed potato", new Food("mashed potato", "en"));
+            food.put("spaghetti", new Food("spaghetti", "en"));
+            food.put("cake", new Food("cake", "en"));
+            food.put("pelmeni", new Food("pelmeni", "en"));
+            food.put("turkey as food", new Food("turkey as food", "en"));
+            food.put("pancake", new Food("pancake", "en"));
+            food.put("pie", new Food("pie", "en"));
+            food.put("porridge", new Food("porridge", "en"));
+            food.put("borscht", new Food("borscht", "en"));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -6,33 +6,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RecipeInitializer {
-    private static HashMap<String, ArrayList<Pair<Integer, String>>> recipes = new HashMap<>();
-    private static HashMap<String, String> ingredients = new HashMap<>();
+    private static HashMap<String, String> recipeURLS = new HashMap<>();
     static {
-        ArrayList<Pair<Integer, String>> recipeSteps = new ArrayList<>();
-        recipeSteps.add(new Pair<>(0, "In a large pot, add potatoes and carrots. Cover completely with water. Bring to a boil and cook about 20-25 minutes or until a knife pierces through easily. (Don’t overcook. Remove carrots and potatoes from water, set aside to cool.)"));
-        recipeSteps.add(new Pair<>(27, "In a small pot add eggs, cover eggs will water and bring to a boil cook. Cook eggs 8-10 minutes."));
-        recipeSteps.add(new Pair<>(38, "Cube all of the ingredients."));
-        recipeSteps.add(new Pair<>(42, "Combine everything, mix. Add mayo to taste. You may need a little more than 1 cup, depending on sizes of your ingredients. "));
-        recipeSteps.add(new Pair<>(47, "Season with salt, pepper and sugar. Add fresh dill, mix."));
-        ingredients.put("olivier salad", "3/4 lb meat, cubed\n" +
-                "3 potatoes, cubed\n" +
-                "3 carrots, cubed\n" +
-                "6 eggs, cubed\n" +
-                "3 pickles, cubed\n" +
-                "1 sweet onion, cubed\n" +
-                "1 cup frozen fresh peas\n" +
-                "1/2 English cucumber (2 small cuces), cubed\n" +
-                "1 cup mayo\n" +
-                "dill to taste\n" +
-                "salt and pepper, to taste\n" +
-                "1/2 tsp sugar");
-        recipes.put("olivier salad", recipeSteps);
-    } //TODO add more recipes
+        recipeURLS.put("borscht", "https://valentinascorner.com/beet-borscht-soup-recipe/");
+        recipeURLS.put("olivier salad", "https://valentinascorner.com/olivier-salad-recipe-russian-potato-salad/");
+        recipeURLS.put("mashed potato", "https://valentinascorner.com/the-best-mashed-potatoes-recipe/");
+        recipeURLS.put("spaghetti", "https://valentinascorner.com/spaghetti-and-meatballs/");
+        recipeURLS.put("cake", "https://valentinascorner.com/chocolate-spartak-cake-recipe/");
+        recipeURLS.put("pelmeni", "https://valentinascorner.com/pelmeni-recipe-meat-dumplings/");
+        recipeURLS.put("turkey as food", "https://valentinascorner.com/the-best-turkey-recipe/");
+        recipeURLS.put("pancake", "https://valentinascorner.com/pancake-charcuterie-board/");
+        recipeURLS.put("pie", "https://valentinascorner.com/easy-chicken-pot-pie/");
+        recipeURLS.put("porridge", "https://valentinascorner.com/how-to-make-oatmeal/");
+
+        recipeURLS.put("борщ", "https://www.gastronom.ru/recipe/47197/donskoj-borshch-s-ryboj");
+        recipeURLS.put("оливье (салат)", "https://www.gastronom.ru/recipe/47852/olive-s-varenoj-kolbasoj");
+        recipeURLS.put("картофельное пюре", "https://www.gastronom.ru/recipe/4079/klassicheskoe-pyshnoe-kartofelnoe-pyure");
+        recipeURLS.put("спагетти", "https://www.gastronom.ru/recipe/46779/spagetti-s-kalmarami");
+        recipeURLS.put("торт", "https://www.gastronom.ru/recipe/35575/medovik-osobennyj");
+        recipeURLS.put("пельмени", "https://www.gastronom.ru/recipe/46680/pelmeni-govyadina-s-chernoslivom");
+        recipeURLS.put("индюшатина", "https://www.gastronom.ru/recipe/24112/tushenaya-indejka");
+        recipeURLS.put("блины", "https://www.gastronom.ru/recipe/31176/limonnye-bliny");
+        recipeURLS.put("пудинг", "https://www.gastronom.ru/recipe/45828/idealnyj-risovyj-puding-s-mandarinami-i-shokoladom");
+        recipeURLS.put("каша", "https://www.gastronom.ru/recipe/46768/ovsyanaya-kasha-malina-i-kokos");
+    }
 
     public static void initRecipe(Food food)
     {
-        food.recipeSteps = recipes.get(food.name);
-        food.ingredients = ingredients.get(food.name);
+        if (recipeURLS.get(food.name) == null)
+        {
+            return;
+        }
+        ArrayList<Pair<Integer, String>> recipe = Parser.getRecipeFromInternet(recipeURLS.get(food.name), food.language);
+        food.recipeSteps = recipe.subList(1, recipe.size());
+        food.ingredients = (String) recipe.get(0).getValue(1);
     }
 }

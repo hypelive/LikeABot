@@ -91,8 +91,9 @@ public class ChatBot {
     public static synchronized String getDescription(Food food){ // if we have description then ok
         // if we don't have then find it in wiki
         StringBuilder res = new StringBuilder();
-        if (food.description.equals("")){
+        if (food.description.equals("") || food.recipeSteps == null || food.ingredients == null){
             food.description = Parser.getDescriptionFromInternet(food.name, resources);
+            RecipeInitializer.initRecipe(food);
             DataBase.setInDB(food);
         }
         res.append(food.description);

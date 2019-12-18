@@ -79,9 +79,26 @@ public class ChatBot {
     }
 
     public static String startCook(Bot bot, String foodName){
+        bot.statusActive = Status.COOK_ACTIVE;
+        return resources.getObject("cook start").toString();
+    }
 
-        // go to organizer and add recipe to schedule
-        return "not implemented yet";
+    public static String helpCook(Bot bot, String input) {
+        return "recipes, quit";
+    }
+
+    public static String getRecipes(Bot bot, String command) {
+        String res = "This is what I have:\n";
+        Object[] recipes = RecipeInitializer.getRecipesNames();
+        for (Object recipe : recipes) {
+            res += (String) recipe + '\n';
+        }
+        return res;
+    }
+
+    public static String quitCook(Bot bot, String command) {
+        bot.statusActive = Status.COOK;
+        return "going back to cook";
     }
 
     public boolean isAlive() {

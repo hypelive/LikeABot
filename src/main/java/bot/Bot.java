@@ -174,6 +174,13 @@ public class Bot {
         dictCook.put("default", ChatBot::getResponse);
 
         dict.put(Status.COOK, dictCook);
+
+        HashMap<String, BiFunction<Bot, String, String>> dictCookActive = new HashMap<>();
+        dictCookActive.put("default", ChatBot::helpCook);
+        dictCookActive.put("recipes", ChatBot::getRecipes);
+        dictCookActive.put("quit", ChatBot::quitCook);
+
+        dict.put(Status.COOK_ACTIVE, dictCookActive);
     }
 
     public String getAnswer(String line) {

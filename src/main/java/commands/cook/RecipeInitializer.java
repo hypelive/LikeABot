@@ -35,4 +35,8 @@ public class RecipeInitializer {
         food.recipeSteps = recipes.get(food.name);
         food.ingredients = ingredients.get(food.name);
     }
+
+    public static Object[] getRecipesNames(){
+        return recipes.keySet().toArray();
+    }
 }

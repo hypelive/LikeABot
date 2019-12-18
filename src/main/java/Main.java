@@ -143,6 +143,9 @@ public class Main extends TelegramLongPollingBot {
 
         } catch (TelegramApiException | NullPointerException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 

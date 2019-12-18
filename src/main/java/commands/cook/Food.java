@@ -29,5 +29,5 @@ public class Food {
         }
     }
 
-    //public ArrayList<string> ingridients;
+    //public ArrayList<string> ingredients;
 }

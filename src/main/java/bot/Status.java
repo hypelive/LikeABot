@@ -12,5 +12,6 @@ public enum Status implements Serializable {
     ORGANIZER_ADD,
     ORGANIZER_EDIT,
     ORGANIZER_SHOW,
-    COOK;
+    COOK,
+    COOK_ACTIVE;
 }

@@ -79,6 +79,19 @@ public class ProgramResources_en extends ListResourceBundle {
                 {"have recipe", "we have a recipe for this, do you want to try?"},
                 {"quit", "going back to the main menu"},
                 {"take recipe", "Here's the recipe"},
+                {"no food", "There is no such food"},
+                {"timeout", "Time is out, the next step: "},
+                {"done", "It's done!"},
+                {"prepare", "You'll have 5 minutes to prepare to cook "},
+                {"hereRec", "Here's the recipe of "},
+                {"min", " minutes"},
+                {"back", "Going back to the menu"},
+                {"helpCook", "That's what I can do:\n* recipes - list all the recipes,\n"
+                        + "* steps - list the steps of making the dish,\n"
+                        + "* ingredients - list the ingredients of the dish,\n" +
+                        "* start - start cooking,\n* find - find food by ingredients\n"
+                        + "* quit - go back to the menu"},
+                {"ihave", "That's what I have:\n"},
                 {"cook start", "Hi! I'm the robotic cooking expert. I'm going " +
                         "to teach you all that I know. Write 'help' to learn " +
                         "more about what I can do."}};

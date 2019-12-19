@@ -73,11 +73,11 @@ public class ChatBot {
     }
 
     public static String helpCook(Bot bot, String input) {
-        return "recipes, steps, ingredients, start, quit";
+        return resources.getObject("helpCook").toString();
     }
 
     public static String getRecipes(Bot bot, String command) {
-        String res = "This is what I have:\n";
+        String res = resources.getObject("ihave").toString();
         Object[] recipes = RecipeInitializer.getRecipesNames(locale);
         for (Object recipe : recipes) {
             res += (String) recipe + '\n';
@@ -95,7 +95,7 @@ public class ChatBot {
             food = food.substring(0, food.length() - 1);
         }
         if (food.equals(""))
-            return "not correct";
+            return resources.getObject("no food").toString();
         HashMap<String, Food> foods = (HashMap<String, Food>) resources.getObject("hashF");
         for (String curFood : foods.keySet()) {
             if (foods.get(curFood).ingredients != null && foods.get(curFood).ingredients.contains(food)) {
@@ -115,7 +115,7 @@ public class ChatBot {
             if (checkIfSend(bot, key, bot.recipesSteps.get(i))) {
                 try {
                     nextTask = bot.recipesSteps.get(i + 1).task;
-                    output = "время вышло, следующий шаг: " + nextTask;
+                    output = resources.getObject("timeout").toString() + nextTask;
                 } catch (IndexOutOfBoundsException e) {
                     e.printStackTrace();
                     output = bot.recipesSteps.get(i).task;
@@ -157,12 +157,13 @@ public class ChatBot {
             bot.recipesSteps.add(makeElement(pair.getValue0(), pair.getValue1()));
             lastTime = pair.getValue0();
         }
-        bot.recipesSteps.add(makeElement(lastTime + 1, "It's done!"));
+        bot.recipesSteps.add(makeElement(lastTime + 1,
+                resources.getObject("done").toString()));
 
         for (OrganizerElement e : bot.recipesSteps) {
             System.out.println(e.date.getTime() + " " + e.task + "\n");
         }
-        return "You'll have 5 minutes to prepare to cook " + food.name;
+        return resources.getObject("prepare").toString() + food.name;
     }
 
     public static String startCooking(Bot bot, String command) {
@@ -177,17 +178,20 @@ public class ChatBot {
     }
 
      public static String getFoodSteps(Bot bot, String command) {
-         String out = "<b>Here's the recipe of " + command.split(" ")[1] + ":</b>\n\n";
+         String out = "<b>" + resources.getObject("hereRec").toString()
+                 + command.split(" ")[1] + ":</b>\n\n";
          try {
              Food food = getFood(command.substring(6));
              getDescription(food);
              List<Pair<Integer, String>> steps = food.recipeSteps;
              for (Pair<Integer, String> pair : steps) {
-                 out += "* " + pair.getValue(1) + " - " + pair.getValue(0) + " minutes.\n\n";
+                 out += "* " + pair.getValue(1) + " - "
+                         + pair.getValue(0)
+                         + resources.getObject("min").toString() + "\n\n";
              }
              return out;
          } catch (NullPointerException e) {
-             return "no food like this";
+             return resources.getObject("no food").toString();
          }
      }
 
@@ -199,15 +203,14 @@ public class ChatBot {
 
     public static String quitCook(Bot bot, String command) {
         bot.statusActive = Status.COOK;
-        return "going back to cook";
+        return resources.getObject("back").toString();
     }
 
     public boolean isAlive() {
         return this.alive;
     }
 
-    public static synchronized String getDescription(Food food){ // if we have description then ok
-        // if we don't have then find it in wiki
+    public static synchronized String getDescription(Food food){
         StringBuilder res = new StringBuilder();
         if (food.description.equals("") || food.recipeSteps == null || food.ingredients == null){
             food.description = Parser.getDescriptionFromInternet(food.name, resources);

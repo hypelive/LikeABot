@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Program {
     public static void main(String[] args) {
-        ChatBot bot = new ChatBot("P");
+        ChatBot bot = new ChatBot();
         while (bot.isAlive()) {
                 Scanner scan = new Scanner(System.in, "CP1251");
                 String inp = scan.nextLine();

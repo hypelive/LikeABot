@@ -27,12 +27,12 @@ public class OrganizerElement implements Comparable<OrganizerElement>, Serializa
         if (flag != Flag.COMPLETED) {
             boolean changed = false;
             GregorianCalendar d = new GregorianCalendar();
-            d.add(Calendar.DAY_OF_MONTH, +3);
+            d.add(Calendar.DATE, +3);
             if (date.before(d)) {
                 flag = Flag.DEADLINE_IS_COMING;
                 changed = true;
             }
-            d.add(Calendar.DAY_OF_MONTH, -4);
+            d.add(Calendar.DATE, -4);
             if (date.before(d)) {
                 flag = Flag.FAILED;
                 changed = true;

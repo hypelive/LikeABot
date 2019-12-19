@@ -36,13 +36,13 @@ public class Bot {
     public String editType = "";
     public int n;
 
+    private ChatBot cook = new ChatBot();
+
     private Study study;
 
     public Boolean test = false;
     public String time;
     public Integer count = 0;
-
-    private ChatBot cook = new ChatBot("P");
 
     public Bot() {
         study = new Study();
@@ -133,21 +133,20 @@ public class Bot {
         dictOrganizer.put("хелп", Organizer::help);
         dictOrganizer.put("delete", Organizer::delete);
         dictOrganizer.put("удалить", Organizer::delete);
-        dictOrganizer.put("change", Organizer::changeTime);
 
         dict.put(Status.ORGANIZER, dictOrganizer);
 
-        HashMap<String, BiFunction<Bot, String, String>> dictOrganizerPush = new HashMap<>();
-        dictOrganizerPush.put("default", Organizer::push);
-        dictOrganizerPush.put("quit", Organizer::quit);
-        dictOrganizerPush.put("выход", Organizer::quit);
-        dictOrganizerPush.put("назад", Organizer::back);
-        dictOrganizerPush.put("back", Organizer::back);
-        dictOrganizerPush.put("help", Organizer::addHelp);
-        dictOrganizerPush.put("хелп", Organizer::addHelp);
-        dictOrganizerPush.put("помощь", Organizer::addHelp);
+        HashMap<String, BiFunction<Bot, String, String>> dictOrganizerPushAll = new HashMap<>();
+        dictOrganizerPushAll.put("default", Organizer::pushWithTime);
+        dictOrganizerPushAll.put("quit", Organizer::quit);
+        dictOrganizerPushAll.put("выход", Organizer::quit);
+        dictOrganizerPushAll.put("назад", Organizer::back);
+        dictOrganizerPushAll.put("back", Organizer::back);
+        dictOrganizerPushAll.put("help", Organizer::addHelpAll);
+        dictOrganizerPushAll.put("хелп", Organizer::addHelpAll);
+        dictOrganizerPushAll.put("помощь", Organizer::addHelpAll);
 
-        dict.put(Status.ORGANIZER_ADD, dictOrganizerPush);
+        dict.put(Status.ORGANIZER_ADD, dictOrganizerPushAll);
 
         HashMap<String, BiFunction<Bot, String, String>> dictEdit = new HashMap<>();
         dictEdit.put("default", Organizer::edit);
@@ -179,6 +178,8 @@ public class Bot {
         dictCookActive.put("default", ChatBot::helpCook);
         dictCookActive.put("recipes", ChatBot::getRecipes);
         dictCookActive.put("quit", ChatBot::quitCook);
+        dictCookActive.put("steps", ChatBot::getFoodSteps);
+        dictCookActive.put("ingredients", ChatBot::getFoodIngredients);
 
         dict.put(Status.COOK_ACTIVE, dictCookActive);
     }

@@ -1,6 +1,8 @@
 package commands.organizer;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -35,6 +37,10 @@ public class Organizer implements Serializable {
         return "Введи новое задание: ДД.ММ.ГГГГ task \n'back' - вернуться назад";
     }
 
+    public static String addHelpAll(Bot bot, String command) {
+        return "Введи новое задание: ДД.ММ.ГГГГ ЧЧ:ММ:СС task \n'back' - вернуться назад";
+    }
+
     public static String start(Bot bot, String command) {
         bot.statusActive = Status.ORGANIZER;
         return "Приветствую, я твой личный Time-Manager.";
@@ -59,9 +65,9 @@ public class Organizer implements Serializable {
         String output = "";
         GregorianCalendar now = new GregorianCalendar();
         for (OrganizerElement e : bot.organizer) {
-            String key = e.date.toString() + e.task;
+            String key = e.date.getTimeInMillis() + e.task;
             updateValues(key, bot);
-            if (now.compareTo(e.date) == -1 && e.flag == Flag.DEADLINE_IS_COMING) {
+            if (now.compareTo(e.date) <= -1 && e.flag == Flag.DEADLINE_IS_COMING) {
                 Integer timeToSend = checkIfSend(bot, key, e);
                 if (timeToSend != -1) {
                     output += getDeadlineMessage(timeToSend) + e.task + '\n';
@@ -71,17 +77,6 @@ public class Organizer implements Serializable {
             }
         }
         return output;
-    }
-
-    public static String changeTime(Bot bot, String command) {
-        GregorianCalendar now = new GregorianCalendar();
-        now.add(Calendar.MINUTE, 4);
-        for (OrganizerElement e : bot.organizer) {
-            if (e.flag == Flag.DEADLINE_IS_COMING) {
-                e.date = now;
-            }
-        }
-        return "Время изменено";
     }
 
     private static String getDeadlineMessage(Integer key) {
@@ -133,7 +128,7 @@ public class Organizer implements Serializable {
 
     public static String add(Bot bot, String command) {
         bot.statusActive = Status.ORGANIZER_ADD;
-        return "Введи новое задание: ДД.ММ.ГГГГ ЗАДАНИЕ";
+        return "Введи новое задание: ДД.ММ.ГГГГ ЧЧ:ММ:СС ЗАДАНИЕ";
     }
 
     public static String completed(Bot bot, String command) {
@@ -157,12 +152,47 @@ public class Organizer implements Serializable {
             return "Неправильный ввод :( \nВведи 'completed [N задачи]'";
         }
     }
+
+    public static String pushWithTime(Bot bot, String command) {
+        DateFormat day = new SimpleDateFormat("dd.MM.yy");
+        DateFormat dayTime = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
+        day.setLenient(false);
+        dayTime.setLenient(false);
+        Date date;
+        String task;
+        try {
+            date = dayTime.parse(command.split(" ")[0]
+                    + " " + command.split(" ")[1]);
+            GregorianCalendar cal = new GregorianCalendar();
+            cal.setTime(date);
+            task = command.split(" ")[2];
+            bot.organizer.add(new OrganizerElement(cal, task));
+        }
+        catch (ParseException e) {
+            try {
+                date = day.parse(command.split(" ")[0]);
+                GregorianCalendar cal = new GregorianCalendar();
+                cal.setTime(date);
+                task = command.split(" ")[1];
+                bot.organizer.add(new OrganizerElement(cal, task));
+            } catch (ParseException f) {
+                return notCorrect();
+            }
+        }
+        Collections.sort(bot.organizer);
+        bot.statusActive = Status.ORGANIZER;
+        return "Задание добавлено";
+    }
+
     public static String push(Bot bot, String command) {
-        if (!Pattern.matches("(\\d+\\.){2}\\d+ .+", command))
+        if (Pattern.matches("(\\d+\\.){2}\\d+ .+", command)) {
+            String date = command.split(" ")[0];
+            String task = command.split("(\\d+\\.){2}\\d+ ")[1];
+            bot.organizer.add(new OrganizerElement(getDate(date), task));
+        }
+        else
             return notCorrect();
-        String date = command.split(" ")[0];
-        String task = command.split("(\\d+\\.){2}\\d+ ")[1];
-        bot.organizer.add(new OrganizerElement(getDate(date), task));
+
         Collections.sort(bot.organizer);
         bot.statusActive = Status.ORGANIZER;
         return "Задание добавлено";
@@ -173,6 +203,31 @@ public class Organizer implements Serializable {
         int month = Integer.parseInt(date.split("\\.")[1]) - 1;
         int year = Integer.parseInt(date.split("\\.")[2]);
         return new GregorianCalendar(year, month, day);
+    }
+
+    private static GregorianCalendar getDateTime(String input) {
+        DateFormat day = new SimpleDateFormat("dd.MM.yy");
+        DateFormat dayTime = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
+        day.setLenient(false);
+        dayTime.setLenient(false);
+        Date date;
+        try {
+            date = dayTime.parse(input.split(" ")[0]
+                    + " " + input.split(" ")[1]);
+            GregorianCalendar cal = new GregorianCalendar();
+            cal.setTime(date);
+            return cal;
+        }
+        catch (ParseException e) {
+            try {
+                date = day.parse(input.split(" ")[0]);
+                GregorianCalendar cal = new GregorianCalendar();
+                cal.setTime(date);
+                return cal;
+            } catch (ParseException f) {
+                return new GregorianCalendar();
+            }
+        }
     }
 
 
@@ -284,7 +339,7 @@ public class Organizer implements Serializable {
         if (Arrays.asList(goodCommands).contains(command))
             bot.editType = command;
         HashMap<String, String> questions = new HashMap<>();
-        questions.put("date", "Введи дату в формате ДД.ММ.ГГГГ");
+        questions.put("date", "Введи дату в формате ДД.ММ.ГГГГ или ДД.ММ.ГГГГ ЧЧ.ММ.СС");
         questions.put("task", "Введи таск");
         questions.put("all", "Введи задание: ДД.ММ.ГГГГ task");
         questions.put("default", "Неверный ввод");
@@ -296,7 +351,7 @@ public class Organizer implements Serializable {
         try {
             switch (bot.editType) {
                 case ("date"):
-                    bot.currentTask.changeDate(getDate(command.split(" ")[0]));
+                    bot.currentTask.changeDate(getDate(command.trim()));
                     bot.currentTask.updateFlag();
                     result += "Дата изменена";
                     break;

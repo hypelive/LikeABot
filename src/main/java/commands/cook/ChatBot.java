@@ -2,11 +2,12 @@ package commands.cook;
 
 import bot.Bot;
 import bot.Status;
+import org.javatuples.Pair;
+
 import java.util.*;
 
 public class ChatBot {
     private final static String bundleBaseName = "commands.cook.ProgramResources";
-    private String name;
     private boolean alive;
     private static Locale locale = new Locale("ru");
     private static HashMap<String, Locale> locales = new HashMap<>();
@@ -18,18 +19,10 @@ public class ChatBot {
 
     public static HashMap<String, Command> commands = new HashMap<>();
 
-    public String echo(Bot bot, String txt) {
-        return txt;
-    }
-
     public String quit(Bot bot, String txt){
         bot.statusActive = Status.MENU;
         String out = commands.get(txt).getDescription(resources);
         return out;
-    }
-
-    public String getName(Bot bot, String txt) {
-        return name;
     }
 
     public String help(Bot bot, String txt) {
@@ -65,7 +58,7 @@ public class ChatBot {
         return str.toString();
     }
 
-    public Food getFood(String arg){
+    private static Food getFood(String arg){
         HashMap<String, Food> food = (HashMap<String, Food>) resources.getObject("hashF");
         return food.get(arg);
     }
@@ -89,12 +82,30 @@ public class ChatBot {
 
     public static String getRecipes(Bot bot, String command) {
         String res = "This is what I have:\n";
-        Object[] recipes = RecipeInitializer.getRecipesNames();
+        Object[] recipes = RecipeInitializer.getRecipesNames(locale);
         for (Object recipe : recipes) {
             res += (String) recipe + '\n';
         }
         return res;
     }
+
+     public static String getFoodSteps(Bot bot, String command) {
+        //steps [food]
+         //TODO Exceptions!!
+         String out = "<b>Here's the recipe of " + command.split(" ")[1] + ":</b>\n\n";
+         Food food = getFood(command.split(" ")[1]);
+         List<Pair<Integer, String>> steps = RecipeInitializer.getRecipeSteps(food);
+         for (Pair<Integer, String> pair : steps) {
+             out += "* " + pair.getValue(1) + " - " + pair.getValue(0) + " minutes.\n\n";
+         }
+         return out;
+     }
+
+     public static String getFoodIngredients(Bot bot, String command) {
+        //ingredients [food]
+         Food food = getFood(command.split(" ")[1]);
+         return RecipeInitializer.getRecipeIngredients(food);
+     }
 
     public static String quitCook(Bot bot, String command) {
         bot.statusActive = Status.COOK;
@@ -140,12 +151,9 @@ public class ChatBot {
         return (String) resources.getObject("can i help");
     }
 
-    public ChatBot(String name) {
-        this.name = name;
+    public ChatBot() {
         this.alive = true;
 
-        commands.put("echo", new Command("echo", this::echo));
-        commands.put("name", new Command("name", this::getName));
         commands.put("help", new Command("help", this::help));
         commands.put("holiday", new Command("holiday", ChatBot::getHolidayFood));
         commands.put("language", new Command("language", ChatBot::changeLanguage));

@@ -33,6 +33,7 @@ public class Bot {
     public CopyOnWriteArrayList<OrganizerElement> organizer = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<OrganizerElement> recipesSteps = new CopyOnWriteArrayList<>();
     public ConcurrentHashMap<String, HashMap<Integer, Boolean>> deadlines = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, HashMap<Integer, Boolean>> deadlinesRecipes = new ConcurrentHashMap<>();
     public OrganizerElement currentTask;
     public String editType = "";
     public int n;

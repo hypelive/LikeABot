@@ -55,6 +55,7 @@ public class ProgramResources_en extends ListResourceBundle {
                 {"cook", "start cook food with recipe"},
                 {"have recipe", "we have a recipe for this, do you want to try?"},
                 {"quit", "going back to the main menu"},
+                {"take recipe", "Here's the recipe"},
                 {"cook start", "Hi! I'm the robotic cooking expert. I'm going " +
                         "to teach you all that I know. Write 'help' to learn " +
                         "more about what I can do."}};

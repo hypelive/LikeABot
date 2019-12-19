@@ -107,7 +107,7 @@ public class Parser {
             }
             else
             {
-                minuteCounter += 10;
+                minuteCounter += 1;
             }
         }
         return recipe;

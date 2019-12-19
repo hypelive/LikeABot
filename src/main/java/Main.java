@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 import com.vdurmont.emoji.EmojiParser;
+import commands.cook.ChatBot;
 import commands.organizer.Flag;
 import commands.organizer.Organizer;
 import javassist.Modifier;
@@ -97,9 +98,19 @@ public class Main extends TelegramLongPollingBot {
                         users.get(a).test = false;
                     }
                     String res = Organizer.checkDeadlines(users.get(a), "");
+                    String resRec = ChatBot.checkRecipesDeadlines(users.get(a));
                     if (!res.equals("")) {
                         SendMessage sendMessage = new SendMessage().setChatId(a);
                         sendMessage.setText(res);
+                        try {
+                            bot.execute(sendMessage);
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (!resRec.equals("")) {
+                        SendMessage sendMessage = new SendMessage().setChatId(a);
+                        sendMessage.setText(resRec);
                         try {
                             bot.execute(sendMessage);
                         } catch (TelegramApiException e) {

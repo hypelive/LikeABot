@@ -85,20 +85,72 @@ public class ChatBot {
         return res;
     }
 
+    public static String checkRecipesDeadlines(Bot bot) {
+        String output = "";
+        String nextTask = "";
+        for (int i = 0; i < bot.recipesSteps.size(); i++) {
+            String key = bot.recipesSteps.get(i).date.getTimeInMillis()
+                    + bot.recipesSteps.get(i).task;
+            updateDeadlines(key, bot);
+            if (checkIfSend(bot, key, bot.recipesSteps.get(i))) {
+                try {
+                    nextTask = bot.recipesSteps.get(i + 1).task;
+                    output = "время вышло, следующий шаг: " + nextTask;
+                } catch (IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                    output = bot.recipesSteps.get(i).task;
+                }
+            }
+        }
+        return output;
+    }
+
+    private static void updateDeadlines(String key, Bot bot) {
+        if (!bot.deadlinesRecipes.containsKey(key)) {
+            HashMap<Integer, Boolean> times = new HashMap<>();
+            times.put(0, false);
+            bot.deadlinesRecipes.put(key, times);
+        }
+    }
+
+    private static Boolean checkIfSend(Bot bot, String key, OrganizerElement e) {
+        GregorianCalendar now = new GregorianCalendar();
+        Long curTimeMs = now.getTimeInMillis();
+        Long taskTimeMs = e.date.getTimeInMillis();
+        Integer eps = 9000;
+        Boolean shouldSend = Math.abs(taskTimeMs - curTimeMs) < eps;
+        if (!bot.deadlinesRecipes.get(key).get(0) && shouldSend) {
+            bot.deadlinesRecipes.get(key).put(0, true);
+            return true;
+        }
+        return false;
+    }
+
     public static String startCook(Bot bot, String command) {
         String out = "";
+        Integer lastTime = 0;
         Food food = getFood(command.substring(6));
         getDescription(food);
         List<Pair<Integer, String>> steps = food.recipeSteps;
         bot.recipesSteps.clear();
-        bot.recipesSteps.add(getElement(5, "You have 5 minutes to prepare"));
         for (Pair<Integer, String> pair : steps) {
-            System.out.println(pair.getValue(0) + " " + pair.getValue(1));
+            bot.recipesSteps.add(makeElement(pair.getValue0(), pair.getValue1()));
+            lastTime = pair.getValue0();
+        }
+        bot.recipesSteps.add(makeElement(lastTime + 1, "It's done!"));
+
+        for (OrganizerElement e : bot.recipesSteps) {
+            System.out.println(e.date.getTime() + " " + e.task + "\n");
         }
         return "You'll have 5 minutes to prepare to cook " + food.name;
     }
 
-    private static OrganizerElement getElement(Integer minutes, String task) {
+    public static String startCooking(Bot bot, String command) {
+        bot.statusActive = Status.COOK_ACTIVE;
+        return (String)resources.getObject("cook start");
+    }
+
+    private static OrganizerElement makeElement(Integer minutes, String task) {
         GregorianCalendar time = new GregorianCalendar();
         time.add(Calendar.MINUTE, minutes);
         return new OrganizerElement(time, task);
@@ -175,7 +227,7 @@ public class ChatBot {
         commands.put("help", new Command("help", this::help));
         commands.put("holiday", new Command("holiday", ChatBot::getHolidayFood));
         commands.put("language", new Command("language", ChatBot::changeLanguage));
-        commands.put("cook", new Command("cook",ChatBot::startCook));
+        commands.put("cook", new Command("cook",ChatBot::startCooking));
         commands.put("quit", new Command("quit", this::quit));
     }
 

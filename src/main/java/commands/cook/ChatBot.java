@@ -69,6 +69,10 @@ public class ChatBot {
             return (String) resources.getObject("unsupported lang");
         locale = locales.get(arg);
         resources = ResourceBundle.getBundle(bundleBaseName, locale);
+        HashMap<String, Food> foods = (HashMap<String, Food>)resources.getObject("hashF");
+        for (String food : foods.keySet()) {
+            getDescription(foods.get(food));
+        }
         return resources.getObject("current lang") + locale.toString();
     }
 
@@ -150,7 +154,11 @@ public class ChatBot {
         String out = "";
         Integer lastTime = 0;
         Food food = getFood(command.substring(6));
+        try {
         getDescription(food);
+        } catch (NullPointerException e) {
+            return resources.getObject("unknown cmd").toString();
+        }
         List<Pair<Integer, String>> steps = food.recipeSteps;
         bot.recipesSteps.clear();
         for (Pair<Integer, String> pair : steps) {
@@ -196,9 +204,14 @@ public class ChatBot {
      }
 
      public static String getFoodIngredients(Bot bot, String command) {
+        try {
          Food food = getFood(command.substring(12));
          getDescription(food);
          return food.ingredients;
+        } catch (NullPointerException e) {
+            return resources.getObject("unknown cmd").toString();
+        }
+
      }
 
     public static String quitCook(Bot bot, String command) {
@@ -246,6 +259,10 @@ public class ChatBot {
 
     public ChatBot() {
         this.alive = true;
+        HashMap<String, Food> foods = (HashMap<String, Food>)resources.getObject("hashF");
+        for (String food : foods.keySet()) {
+            getDescription(foods.get(food));
+        }
 
         commands.put("help", new Command("help", this::help));
         commands.put("holiday", new Command("holiday", ChatBot::getHolidayFood));

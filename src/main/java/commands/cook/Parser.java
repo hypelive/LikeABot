@@ -97,7 +97,7 @@ public class Parser {
                 .map((String step) -> step.replaceAll(recipeParseRegexps.get(lang).get("stepRep1"), "")
                                           .replaceAll(recipeParseRegexps.get(lang).get("stepRep2"), ""))
                 .toArray(String[]::new);
-        int minuteCounter = 5; //for preparing
+        int minuteCounter = 1;
         Pattern timePattern = Pattern.compile(recipeParseRegexps.get(lang).get("timePtr"));
         for (String step : matches)
         {

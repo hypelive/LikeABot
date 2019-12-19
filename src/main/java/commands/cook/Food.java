@@ -16,8 +16,6 @@ public class Food {
     public List<Pair<Integer, String>> recipeSteps = new ArrayList<Pair<Integer, String>>();
     public String ingredients;
 
-    public static Set<String> tags = new HashSet<>();
-
     public Food(String name, String language) throws IOException {
         this.description = "";
         this.language = language;

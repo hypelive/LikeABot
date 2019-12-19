@@ -37,7 +37,7 @@ public class Parser {
         regexps_ru.put("ingredientPtr", "<ul>\\s*<li class=\"recipe__ingredient\" itemprop=\"ingredients\">.*?</li>\\s*</ul>\\s*<div i");
         regexps_ru.put("ingredientRep1", "\\<ul>\\s*\\<li class=\"recipe__ingredient\" itemprop=\"ingredients\">");
         regexps_ru.put("ingredientRep2", "\\</li>.*?\\<li class=\"recipe__ingredient\" itemprop=\"ingredients\">");
-        regexps_ru.put("ingredientRep3", "\\</li>\\s*\\</ul>.*?");
+        regexps_ru.put("ingredientRep3", "\\</li>\\s*\\</ul>\\s*<div i");
         regexps_ru.put("stepPtr", "\\<div class=\"recipe__step-text\">.*?\\</div>");
         regexps_ru.put("stepRep1", "\\<div class=\"recipe__step-text\">\\s+");
         regexps_ru.put("stepRep2", "\\s+?\\</div>");

@@ -87,7 +87,9 @@ public class Parser {
                 .replaceFirst(recipeParseRegexps.get(lang).get("ingredientRep1"), "")
                 .replaceAll(recipeParseRegexps.get(lang).get("ingredientRep2"), ",")
                 .replaceAll(recipeParseRegexps.get(lang).get("ingredientRep3"), "");
-        recipe.add(new Pair<>(0, ingredients));
+        recipe.add(new Pair<>(0, ingredients
+                .replaceAll(" .*?#.*? ", "")
+                .replaceAll(" .*?\\\\u.*? ", "")));
         String[] matches = Pattern.compile(recipeParseRegexps.get(lang).get("stepPtr"))
                 .matcher(page)
                 .results()
@@ -99,7 +101,9 @@ public class Parser {
         Pattern timePattern = Pattern.compile(recipeParseRegexps.get(lang).get("timePtr"));
         for (String step : matches)
         {
-            recipe.add(new Pair<>(minuteCounter, step));
+            recipe.add(new Pair<>(minuteCounter, step
+                    .replaceAll(" .*?#.*? ", "")
+                    .replaceAll(" .*?\\\\u.*? ", "")));
             Matcher matcher = timePattern.matcher(step);
             if (matcher.find())
             {

@@ -85,6 +85,26 @@ public class ChatBot {
         return res;
     }
 
+    public static String getFoodByName(Bot bot, String command) {
+        String food = command.substring(5);
+        String out = "";
+        HashSet<String> tags = (HashSet<String>)resources.getObject("tags");
+        while (food.length() != 0) {
+            if (tags.contains(food))
+                break;
+            food = food.substring(0, food.length() - 1);
+        }
+        if (food.equals(""))
+            return "not correct";
+        HashMap<String, Food> foods = (HashMap<String, Food>) resources.getObject("hashF");
+        for (String curFood : foods.keySet()) {
+            if (foods.get(curFood).ingredients != null && foods.get(curFood).ingredients.contains(food)) {
+                out += foods.get(curFood).name + "\n";
+            }
+        }
+        return out;
+    }
+
     public static String checkRecipesDeadlines(Bot bot) {
         String output = "";
         String nextTask = "";
@@ -172,7 +192,7 @@ public class ChatBot {
      }
 
      public static String getFoodIngredients(Bot bot, String command) {
-         Food food = getFood(command.split(" ")[1]);
+         Food food = getFood(command.substring(12));
          getDescription(food);
          return food.ingredients;
      }

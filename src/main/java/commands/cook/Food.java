@@ -4,7 +4,9 @@ import org.javatuples.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Food {
     public String name;
@@ -14,6 +16,8 @@ public class Food {
     public List<Pair<Integer, String>> recipeSteps = new ArrayList<Pair<Integer, String>>(); //тут пары типа : (15, "посолите воду")
                                                                              //где 15 минут от base time
     public String ingredients;
+
+    public static Set<String> tags = new HashSet<>();
 
     //так надо будет составить и добавить в органайзер рецепт
 

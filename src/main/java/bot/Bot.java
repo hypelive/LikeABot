@@ -183,6 +183,7 @@ public class Bot {
         dictCookActive.put("steps", ChatBot::getFoodSteps);
         dictCookActive.put("ingredients", ChatBot::getFoodIngredients);
         dictCookActive.put("start", ChatBot::startCook);
+        dictCookActive.put("find", ChatBot::getFoodByName);
 
         dict.put(Status.COOK_ACTIVE, dictCookActive);
     }

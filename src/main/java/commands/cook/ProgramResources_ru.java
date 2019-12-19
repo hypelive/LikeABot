@@ -2,11 +2,35 @@ package commands.cook;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ListResourceBundle;
 
 public class ProgramResources_ru extends ListResourceBundle {
     @Override
     protected Object[][] getContents() {
+        HashSet<String> tags = new HashSet<>();
+        tags.add("масл");
+        tags.add("яйца");
+        tags.add("яиц");
+        tags.add("молок");
+        tags.add("сахар");
+        tags.add("мук");
+        tags.add("лимон");
+        tags.add("макарон");
+        tags.add("тест");
+        tags.add("мяс");
+        tags.add("фасол");
+        tags.add("перец");
+        tags.add("перц");
+        tags.add("шоколад");
+        tags.add("слив");
+        tags.add("какао");
+        tags.add("фундук");
+        tags.add("картофел");
+        tags.add("огур");
+        tags.add("колбас");
+        tags.add("морков");
+        tags.add("помидор");
         HashMap<String, Food> food = new HashMap<String, Food>();
         try{
             food.put("оливье (салат)", new Food("оливье (салат)", "ru"));
@@ -34,7 +58,7 @@ public class ProgramResources_ru extends ListResourceBundle {
         holidayFood.put("девятое мая", food.get("пудинг"));
         holidayFood.put("первое апреля", food.get("пирог"));
         holidayFood.put("день России", food.get("борщ"));
-        return new Object[][] {{"hashM", holidayFood}, {"hashF", food},
+        return new Object[][] {{"hashM", holidayFood}, {"hashF", food}, {"tags", tags},
                 {"nfInf", "Информация не найдена"},
                 {"findR", "вы можете найти рецепты здесь: "},
                 {"url", "https://eda.ru/recipesearch?q="},

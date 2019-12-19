@@ -2,11 +2,34 @@ package commands.cook;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ListResourceBundle;
 
 public class ProgramResources_en extends ListResourceBundle {
     @Override
     protected Object[][] getContents() {
+        HashSet<String> tags = new HashSet<>();
+        tags.add("butter");
+        tags.add("egg");
+        tags.add("milk");
+        tags.add("sugar");
+        tags.add("meal");
+        tags.add("lemon");
+        tags.add("spaghetti");
+        tags.add("dough");
+        tags.add("meat");
+        tags.add("bean");
+        tags.add("pepper");
+        tags.add("chocolate");
+        tags.add("cream");
+        tags.add("cocoa");
+        tags.add("nut");
+        tags.add("potato");
+        tags.add("cucumber");
+        tags.add("sausage");
+        tags.add("carrot");
+        tags.add("tomato");
+        tags.add("oat");
         HashMap food = new HashMap<>();
         try {
             food.put("olivier salad", new Food("olivier salad", "en"));
@@ -34,7 +57,7 @@ public class ProgramResources_en extends ListResourceBundle {
         holidayFood.put("9th may", food.get("porridge"));
         holidayFood.put("1st april", food.get("pie"));
         holidayFood.put("russia day", food.get("borscht"));
-        return new Object[][] {{"hashM", holidayFood}, {"hashF", food},
+        return new Object[][] {{"hashM", holidayFood}, {"hashF", food}, {"tags", tags},
                 {"nfInf", "information about this food is not found"},
                 {"findR", "you can find recipes here: "},
                 {"url", "https://recipebook.io/recipes?key="},

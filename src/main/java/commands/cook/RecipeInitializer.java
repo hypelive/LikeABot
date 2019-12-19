@@ -30,7 +30,7 @@ public class RecipeInitializer {
         recipeURLS.put("индюшатина", "https://www.gastronom.ru/recipe/24112/tushenaya-indejka");
         recipeURLS.put("блины", "https://www.gastronom.ru/recipe/31176/limonnye-bliny");
         recipeURLS.put("пудинг", "https://www.gastronom.ru/recipe/45828/idealnyj-risovyj-puding-s-mandarinami-i-shokoladom");
-        recipeURLS.put("каша", "https://www.gastronom.ru/recipe/46768/ovsyanaya-kasha-malina-i-kokos");
+        //recipeURLS.put("каша", "https://www.gastronom.ru/recipe/46768/ovsyanaya-kasha-malina-i-kokos");
     }
     private static HashMap<String, String> recipeURLSen = new HashMap<>();
     static {
@@ -56,7 +56,7 @@ public class RecipeInitializer {
         recipeURLSru.put("индюшатина", "https://www.gastronom.ru/recipe/24112/tushenaya-indejka");
         recipeURLSru.put("блины", "https://www.gastronom.ru/recipe/31176/limonnye-bliny");
         recipeURLSru.put("пудинг", "https://www.gastronom.ru/recipe/45828/idealnyj-risovyj-puding-s-mandarinami-i-shokoladom");
-        recipeURLSru.put("каша", "https://www.gastronom.ru/recipe/46768/ovsyanaya-kasha-malina-i-kokos");
+        //recipeURLSru.put("каша", "https://www.gastronom.ru/recipe/46768/ovsyanaya-kasha-malina-i-kokos");
     }
 
     public static void initRecipe(Food food)

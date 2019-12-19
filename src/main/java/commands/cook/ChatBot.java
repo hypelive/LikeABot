@@ -93,12 +93,17 @@ public class ChatBot {
         //steps [food]
          //TODO Exceptions!!
          String out = "<b>Here's the recipe of " + command.split(" ")[1] + ":</b>\n\n";
-         Food food = getFood(command.split(" ")[1]);
-         List<Pair<Integer, String>> steps = RecipeInitializer.getRecipeSteps(food);
-         for (Pair<Integer, String> pair : steps) {
-             out += "* " + pair.getValue(1) + " - " + pair.getValue(0) + " minutes.\n\n";
+         try {
+             Food food = getFood(command.substring(6));
+             getDescription(food);
+             List<Pair<Integer, String>> steps = food.recipeSteps;
+             for (Pair<Integer, String> pair : steps) {
+                 out += "* " + pair.getValue(1) + " - " + pair.getValue(0) + " minutes.\n\n";
+             }
+             return out;
+         } catch (NullPointerException e) {
+             return "no food like this";
          }
-         return out;
      }
 
      public static String getFoodIngredients(Bot bot, String command) {

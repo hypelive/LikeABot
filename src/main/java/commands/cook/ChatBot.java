@@ -90,8 +90,6 @@ public class ChatBot {
     }
 
      public static String getFoodSteps(Bot bot, String command) {
-        //steps [food]
-         //TODO Exceptions!!
          String out = "<b>Here's the recipe of " + command.split(" ")[1] + ":</b>\n\n";
          try {
              Food food = getFood(command.substring(6));
@@ -107,9 +105,9 @@ public class ChatBot {
      }
 
      public static String getFoodIngredients(Bot bot, String command) {
-        //ingredients [food]
          Food food = getFood(command.split(" ")[1]);
-         return RecipeInitializer.getRecipeIngredients(food);
+         getDescription(food);
+         return food.ingredients;
      }
 
     public static String quitCook(Bot bot, String command) {

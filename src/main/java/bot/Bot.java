@@ -31,6 +31,7 @@ public class Bot {
     public ArrayList<Character> usageLetters;
 
     public CopyOnWriteArrayList<OrganizerElement> organizer = new CopyOnWriteArrayList<>();
+    public CopyOnWriteArrayList<OrganizerElement> recipesSteps = new CopyOnWriteArrayList<>();
     public ConcurrentHashMap<String, HashMap<Integer, Boolean>> deadlines = new ConcurrentHashMap<>();
     public OrganizerElement currentTask;
     public String editType = "";
@@ -180,6 +181,7 @@ public class Bot {
         dictCookActive.put("quit", ChatBot::quitCook);
         dictCookActive.put("steps", ChatBot::getFoodSteps);
         dictCookActive.put("ingredients", ChatBot::getFoodIngredients);
+        dictCookActive.put("start", ChatBot::startCook);
 
         dict.put(Status.COOK_ACTIVE, dictCookActive);
     }

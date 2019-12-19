@@ -2,6 +2,7 @@ package commands.cook;
 
 import bot.Bot;
 import bot.Status;
+import commands.organizer.OrganizerElement;
 import org.javatuples.Pair;
 
 import java.util.*;
@@ -71,13 +72,8 @@ public class ChatBot {
         return resources.getObject("current lang") + locale.toString();
     }
 
-    public static String startCook(Bot bot, String foodName){
-        bot.statusActive = Status.COOK_ACTIVE;
-        return resources.getObject("cook start").toString();
-    }
-
     public static String helpCook(Bot bot, String input) {
-        return "recipes, quit";
+        return "recipes, steps, ingredients, start, quit";
     }
 
     public static String getRecipes(Bot bot, String command) {
@@ -87,6 +83,25 @@ public class ChatBot {
             res += (String) recipe + '\n';
         }
         return res;
+    }
+
+    public static String startCook(Bot bot, String command) {
+        String out = "";
+        Food food = getFood(command.substring(6));
+        getDescription(food);
+        List<Pair<Integer, String>> steps = food.recipeSteps;
+        bot.recipesSteps.clear();
+        bot.recipesSteps.add(getElement(5, "You have 5 minutes to prepare"));
+        for (Pair<Integer, String> pair : steps) {
+            System.out.println(pair.getValue(0) + " " + pair.getValue(1));
+        }
+        return "You'll have 5 minutes to prepare to cook " + food.name;
+    }
+
+    private static OrganizerElement getElement(Integer minutes, String task) {
+        GregorianCalendar time = new GregorianCalendar();
+        time.add(Calendar.MINUTE, minutes);
+        return new OrganizerElement(time, task);
     }
 
      public static String getFoodSteps(Bot bot, String command) {

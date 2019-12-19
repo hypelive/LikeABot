@@ -33,10 +33,6 @@ public class Organizer implements Serializable {
                 "* 'quit' - выход в меню";
     }
 
-    public static String addHelp(Bot bot, String command) {
-        return "Введи новое задание: ДД.ММ.ГГГГ task \n'back' - вернуться назад";
-    }
-
     public static String addHelpAll(Bot bot, String command) {
         return "Введи новое задание: ДД.ММ.ГГГГ ЧЧ:ММ:СС task \n'back' - вернуться назад";
     }

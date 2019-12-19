@@ -35,12 +35,12 @@ public class Parser {
 
         HashMap<String, String> regexps_ru = new HashMap<>();
         regexps_ru.put("ingredientPtr", "<ul>\\s*<li class=\"recipe__ingredient\" itemprop=\"ingredients\">.*?</li>\\s*</ul>\\s*<div i");
-        regexps_ru.put("ingredientRep1", "\\<ul>\\s*\\<li class=\"recipe__ingredient\" itemprop=\"ingredients\">");
-        regexps_ru.put("ingredientRep2", "\\</li>.*?\\<li class=\"recipe__ingredient\" itemprop=\"ingredients\">");
-        regexps_ru.put("ingredientRep3", "\\</li>\\s*\\</ul>.*<div i");
-        regexps_ru.put("stepPtr", "\\<div class=\"recipe__step-text\">.*?\\</div>");
-        regexps_ru.put("stepRep1", "\\<div class=\"recipe__step-text\">\\s+");
-        regexps_ru.put("stepRep2", "\\s+?\\</div>");
+        regexps_ru.put("ingredientRep1", "<ul>\\s*<li class=\"recipe__ingredient\" itemprop=\"ingredients\">");
+        regexps_ru.put("ingredientRep2", "<\\/li>(\\s{0,1}.+?\\s{0,1}.+?)<li class=\"recipe__ingredient\" itemprop=\"ingredients\">");
+        regexps_ru.put("ingredientRep3", "\\</li>\\s*\\</ul>\\s*<div i");
+        regexps_ru.put("stepPtr", "<div class=\"recipe__step-text\">.*?\\</div>");
+        regexps_ru.put("stepRep1", "<div class=\"recipe__step-text\">\\s+");
+        regexps_ru.put("stepRep2", "\\s+?</div>");
         regexps_ru.put("timePtr", "(\\d+?) мин");
         recipeParseRegexps.put("ru", regexps_ru);
     }
@@ -84,7 +84,7 @@ public class Parser {
         Matcher ingredientMatcher = ingredientPattern.matcher(page);
         ingredientMatcher.find();
         String ingredients = page.substring(ingredientMatcher.start(), ingredientMatcher.end())
-                .replaceAll(recipeParseRegexps.get(lang).get("ingredientRep1"), "")
+                .replaceFirst(recipeParseRegexps.get(lang).get("ingredientRep1"), "")
                 .replaceAll(recipeParseRegexps.get(lang).get("ingredientRep2"), ",")
                 .replaceAll(recipeParseRegexps.get(lang).get("ingredientRep3"), "");
         recipe.add(new Pair<>(0, ingredients));
